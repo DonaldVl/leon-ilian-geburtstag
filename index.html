@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brainstorm: Düsseldorf-Wochenende mit Leon &amp; Ilian</title>
+<style>
+  :root {
+    --bg: #fdf6ec;
+    --bg-2: #f5ecdc;
+    --ink: #2b2118;
+    --muted: #6a5a48;
+    --line: #d8c8aa;
+    --accent: #c8412a;
+    --accent-2: #d99a3a;
+    --accent-3: #2f5d50;
+    --purple: #6b4e8b;
+    --card: #fffaf1;
+    --shadow: 0 4px 14px rgba(60, 40, 20, 0.08);
+    --shadow-h: 0 12px 32px rgba(60, 40, 20, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+  }
+
+  /* ---------- Header ---------- */
+  header.top {
+    background:
+      radial-gradient(circle at 80% 30%, rgba(217,154,58,0.18), transparent 50%),
+      radial-gradient(circle at 20% 70%, rgba(200,65,42,0.12), transparent 50%),
+      linear-gradient(180deg, #fdf6ec 0%, #f5ecdc 100%);
+    padding: 48px 24px 36px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header.top h1 {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: clamp(28px, 4vw, 44px);
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  header.top h1 .amp { color: var(--accent); }
+  header.top .sub {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  /* ---------- Plan-Block ---------- */
+  .plan {
+    max-width: 960px;
+    margin: -18px auto 28px;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 22px 26px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+  }
+  .plan h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-3);
+  }
+  .plan ul {
+    margin: 0;
+    padding-left: 22px;
+    color: #3b2e21;
+  }
+  .plan li { margin-bottom: 4px; }
+  .plan li strong { color: var(--accent); }
+
+  /* ---------- Filter & Toolbar ---------- */
+  .toolbar {
+    max-width: 1160px;
+    margin: 0 auto 18px;
+    padding: 0 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter button {
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .filter button:hover { border-color: var(--accent); color: var(--accent); }
+  .filter button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+  .actions button {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .actions button:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ---------- Events Grid ---------- */
+  .grid {
+    max-width: 1160px;
+    margin: 0 auto 40px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 18px 18px 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .card:hover { box-shadow: var(--shadow-h); transform: translateY(-2px); }
+  .card.cat-kunst { border-top-color: var(--purple); }
+  .card.cat-kulinarik { border-top-color: var(--accent); }
+  .card.cat-tour { border-top-color: var(--accent-3); }
+  .card.cat-familie { border-top-color: var(--accent-2); }
+  .card.hidden { display: none; }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .card-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+  .card-cat {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .card h3 {
+    margin: 4px 0 4px;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+  .card .desc {
+    font-size: 14px;
+    color: #443628;
+    flex-grow: 1;
+  }
+  .card a.detail {
+    color: var(--accent);
+    font-size: 13px;
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+    align-self: flex-start;
+  }
+  .card a.detail:hover { color: #a8351f; border-style: solid; }
+
+  /* Vote-Block */
+  .votes {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+  }
+  .vote-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 6px 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: all 0.15s ease;
+  }
+  .vote-btn .heart { font-size: 18px; }
+  .vote-btn[data-on="1"] {
+    background: rgba(200,65,42,0.08);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .vote-btn[data-on="1"] .heart { animation: pop 0.3s ease; }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+  }
+
+  textarea.note {
+    margin-top: 8px;
+    width: 100%;
+    min-height: 56px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: #fbf3e2;
+    color: var(--ink);
+    resize: vertical;
+  }
+  textarea.note:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+  }
+
+  /* Score-Bubble */
+  .score {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--accent);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease;
+  }
+  .score.show { opacity: 1; transform: scale(1); }
+
+  /* ---------- Übersicht / Ranking ---------- */
+  .summary {
+    max-width: 960px;
+    margin: 0 auto 40px;
+    background: linear-gradient(135deg, #fffaf1 0%, #f5ecdc 100%);
+    border-radius: 14px;
+    padding: 24px 26px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+  }
+  .summary h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent-3);
+  }
+  .ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rank-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    border-bottom: 1px dashed rgba(216, 200, 170, 0.5);
+    font-size: 14px;
+  }
+  .rank-row:last-child { border-bottom: none; }
+  .rank-pos {
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .rank-pos.gold { background: #d4af37; }
+  .rank-pos.silver { background: #b0b0b0; }
+  .rank-pos.bronze { background: #b87333; }
+  .rank-name { flex: 1; }
+  .rank-score {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .rank-empty {
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    padding: 14px;
+  }
+
+  /* ---------- Notiz-Block (allgemein) ---------- */
+  .general-notes {
+    max-width: 960px;
+    margin: 0 auto 50px;
+    padding: 0 24px;
+  }
+  .general-notes label {
+    display: block;
+    font-size: 14px;
+    color: var(--accent-3);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+  }
+  .general-notes textarea {
+    width: 100%;
+    min-height: 110px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    resize: vertical;
+  }
+
+  footer.bottom {
+    text-align: center;
+    padding: 28px 16px 40px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+  }
+  footer.bottom .heart { color: var(--accent); }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 100;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">Geschenk · Konzertwochenende · 10.–11. Juli 2026</div>
+  <h1>Düsseldorf-Wochenende für Leon <span class="amp">&amp;</span> Ilian</h1>
+  <p class="sub">Hier könnt ihr in Ruhe brainstormen und entscheiden, was wir am Samstag zusammen machen. Klickt eure Favoriten an, schreibt Notizen rein – alles wird automatisch in eurem Browser gespeichert.</p>
+</header>
+
+<section class="plan">
+  <h2>Der Plan</h2>
+  <ul>
+    <li><strong>Freitag, 10.07.</strong> – Konzert in Düsseldorf 🎤 (Tickets sind da)</li>
+    <li><strong>Freitag → Samstag</strong> – Wir übernachten gemeinsam im Hotel 🏨</li>
+    <li><strong>Samstag morgen</strong> – Frühstück oder Brunch ☕🥐</li>
+    <li><strong>Samstag tagsüber</strong> – Düsseldorf erleben + ein Event nach eurer Wahl ⤵️</li>
+    <li><strong>Eingeladen seid ihr</strong> – Hotel, Essen &amp; das Event übernimmt Papa 🎁</li>
+  </ul>
+</section>
+
+<div class="toolbar">
+  <div class="filter" id="filter">
+    <button data-cat="all" class="active">Alle</button>
+    <button data-cat="kulinarik">🍽️ Kulinarik</button>
+    <button data-cat="kunst">🎨 Kunst</button>
+    <button data-cat="tour">🚌 Stadt &amp; Tour</button>
+    <button data-cat="familie">🥐 Familie</button>
+  </div>
+  <div class="actions">
+    <button onclick="resetAll()">↺ Alles zurücksetzen</button>
+  </div>
+</div>
+
+<section class="grid" id="grid"></section>
+
+<section class="summary">
+  <h2>Aktuelles Ranking</h2>
+  <div class="ranking" id="ranking">
+    <div class="rank-empty">Noch keine Stimmen abgegeben – los geht's! 💛</div>
+  </div>
+</section>
+
+<div class="general-notes">
+  <label for="generalNote">Allgemeine Notizen / Brainstorm</label>
+  <textarea id="generalNote" placeholder="Was wollt ihr essen? Welche Hotelgegend wäre am besten? Eigene Ideen außerhalb der Liste?"></textarea>
+</div>
+
+<footer class="bottom">
+  Gemacht mit <span class="heart">♥</span> für Leon &amp; Ilian – alle Eingaben werden lokal in eurem Browser gespeichert.
+</footer>
+
+<div id="toast"></div>
+
+<script>
+const events = [
+  { id: 1,  cat: "tour",        icon: "🚌", title: "Panoramafahrt mit Getränken",
+    desc: "Düsseldorf vom bequemen Sitz aus entdecken – Highlights der Stadt inkl. Erfrischung. Familienfreundlich.",
+    url: "https://www.visitduesseldorf.de/event/panoramafahrt-inkl.-getraenkeinkl.-kind-4-13-jahre-71c6094d7a" },
+  { id: 2,  cat: "kulinarik",   icon: "🍽️", title: "Düsseldorfs Kulinarische Seele",
+    desc: "Geführte Tour durch die Geschmackswelten der Stadt: Spezialitäten, Geschichten, Geheimtipps.",
+    url: "https://www.visitduesseldorf.de/event/duesseldorfs-kulinarische-seele-1be8f9074d" },
+  { id: 3,  cat: "kunst",       icon: "🎨", title: "Monet · Cézanne · Matisse",
+    desc: "The Scharf Collection – ein echtes Schwergewicht: Werke der Klassischen Moderne im Museum.",
+    url: "https://www.visitduesseldorf.de/event/monet-cezanne-matisse-the-scharf-collection-b7abf0c1d6" },
+  { id: 4,  cat: "kunst",       icon: "🌌", title: "Stellar Grounds: Other Worlds",
+    desc: "Chris Cabrim – fremde Welten, atmosphärisch und zeitgenössisch. Etwas für Entdecker.",
+    url: "https://www.visitduesseldorf.de/event/chris-cabrim-stellar-grounds-other-worlds-8f589db1f2" },
+  { id: 5,  cat: "kunst",       icon: "🗺️", title: "Uncertain Maps",
+    desc: "Eine Ausstellung über Karten, Räume und das, was sich nicht eindeutig vermessen lässt.",
+    url: "https://www.visitduesseldorf.de/event/uncertain-maps-a9034ef5ee" },
+  { id: 6,  cat: "tour",        icon: "🍺", title: "Altstadt & Altbier Tour",
+    desc: "Klassiker: Düsseldorfs „längste Theke der Welt“, Geschichten und ein gepflegtes Alt zwischendurch.",
+    url: "https://www.visitduesseldorf.de/event/duesseldorf-altstadt-und-altbier-tour-ad72e6205b" },
+  { id: 7,  cat: "tour",        icon: "🍻", title: "Altbier & Craftbeer Tour",
+    desc: "Tradition trifft Craft: Düsseldorfs Bierszene mit modernen Brauereien für ältere Genießer.",
+    url: "https://www.visitduesseldorf.de/event/duesseldorfs-altbier-craftbeer-tour-207d8ff0c0" },
+  { id: 8,  cat: "tour",        icon: "🏙️", title: "MedienHafen-Führung",
+    desc: "Die spektakulären Gehry-Bauten und moderne Stararchitektur am Rhein – 120 Min. zum Staunen.",
+    url: "https://www.visitduesseldorf.de/event/medienhafen-fuehrung-05d392da6f" },
+  { id: 9,  cat: "kulinarik",   icon: "🌮", title: "Flingern kulinarisch – Food Tour",
+    desc: "Drei Stunden durchs Trendviertel mit fünf internationalen Kostproben und vielen Anekdoten.",
+    url: "https://www.visitduesseldorf.de/event/flingern-kulinarisch-die-food-tour-8a597a8ecc" },
+  { id: 10, cat: "kunst",       icon: "🖼️", title: "Die Große 2026",
+    desc: "Düsseldorfs traditionsreiche Kunstausstellung – Malerei, Skulptur und mehr unter einem Dach.",
+    url: "https://rausgegangen.de/events/die-grosse-2026-5/" },
+  { id: 11, cat: "familie",     icon: "🥐", title: "Family Brunch",
+    desc: "Entspannter Brunch in geselliger Atmosphäre – passt perfekt zu unserem Samstagvormittag.",
+    url: "https://rausgegangen.de/events/family-brunch-31/" },
+  { id: 12, cat: "kulinarik",   icon: "🍷", title: "Urban Wine Walk",
+    desc: "Stadt-Spaziergang mit Wein-Stationen – Düsseldorf entdecken im Genießer-Modus.",
+    url: "https://rausgegangen.de/events/urban-wine-walk-0/" },
+  { id: 13, cat: "kunst",       icon: "🎭", title: "Live Art Battle",
+    desc: "Künstler:innen treten live gegeneinander an – Energie, Musik, Publikumsstimmung. Anders als Museum.",
+    url: "https://rausgegangen.de/events/live-art-battle-1/" },
+
+  // --- Brainstorm-Erweiterung: konkrete Optionen für Sa, 11.07.2026 ---
+  { id: 14, cat: "familie", icon: "🐠", title: "Aquazoo Löbbecke Museum",
+    desc: "Aquarium, Tierpark und Naturkundemuseum unter einem Dach – ca. 5.000 Tiere, 25 Themenräume. Komplett barrierefrei, perfekt für einen entspannten Vormittag.",
+    url: "https://www.duesseldorf.de/aquazoo" },
+  { id: 15, cat: "familie", icon: "🏰", title: "Schloss Benrath + Park",
+    desc: "Barockschloss vor den Toren der Stadt mit weitläufigem Park, Teichen und Spielplatz. Perfekt zum Spazieren, Picknicken, Fotos machen.",
+    url: "https://www.schloss-benrath.de/" },
+  { id: 16, cat: "tour", icon: "⛴️", title: "Rhein-Schifffahrt (KD)",
+    desc: "Panoramarundfahrt auf dem Rhein – Stadt vom Wasser aus, Altstadt, Hafen, Rheinkniebrücke. 1–2 Std., entspannt & wettertauglich.",
+    url: "https://www.k-d.com/" },
+  { id: 17, cat: "kulinarik", icon: "🥨", title: "Carlsplatz Markt",
+    desc: "Düsseldorfs Feinschmecker-Markt mitten in der Altstadt: Austern, Käse, Tapas, frische Säfte. Samstagvormittags am buntesten.",
+    url: "https://www.carlsplatz.de/" },
+  { id: 18, cat: "kulinarik", icon: "🍣", title: "Little Tokyo Spaziergang + Essen",
+    desc: "Immermannstraße & Umgebung: Ramen, Sushi, Bubble Tea, japanische Buchläden. Düsseldorf hat eine der größten japanischen Communities Europas.",
+    url: "https://www.visitduesseldorf.de/erleben/sehenswertes/little-tokyo-duesseldorf" },
+  { id: 19, cat: "kunst", icon: "📷", title: "NRW-Forum Ehrenhof",
+    desc: "Pop-Kultur, Fotografie, digitale Kunst – kuratiert für ein Publikum, das Museumsmuff vermeidet. Direkt am Rhein, neben dem Kunstpalast.",
+    url: "https://www.nrw-forum.de/" },
+  { id: 20, cat: "kunst", icon: "🚇", title: "Kunst im Tunnel (KIT)",
+    desc: "Unterirdische Kunsthalle in einem ehemaligen U-Bahn-Tunnel unter der Rheinpromenade. Wechselausstellungen, atmosphärisch, ungewöhnlich.",
+    url: "https://www.kunst-im-tunnel.de/" },
+  { id: 21, cat: "familie", icon: "🌳", title: "Hofgarten &amp; Kö-Bogen II",
+    desc: "Spaziergang vom historischen Hofgarten zum spektakulären begrünten Kö-Bogen II – Düsseldorfs grüne Stadtarchitektur in 30 Minuten.",
+    url: "https://www.visitduesseldorf.de/erleben/sehenswertes/architektur" },
+  { id: 22, cat: "familie", icon: "🌸", title: "Nordpark + Japanischer Garten",
+    desc: "Großer Park im Norden mit kostenlosem Japanischem Garten – ruhige Oase mit Koi-Teich, Bambus, Steinlaternen. Sommerlich entspannt.",
+    url: "https://www.duesseldorf.de/stadtgruen/parks/nordpark" },
+  { id: 23, cat: "tour", icon: "🚍", title: "Hop-On-Hop-Off Stadtrundfahrt",
+    desc: "Düsseldorfs Highlights mit dem Doppeldecker. Tagesticket – steigt aus, wo es interessant wird (MedienHafen, Königsallee, Altstadt).",
+    url: "https://www.visitduesseldorf.de/event/hop-on-hop-off-duesseldorf-24-stunden-ticket-04da6d85a5" },
+  { id: 24, cat: "kunst", icon: "🎤", title: "Open Air Park – Die Broilers",
+    desc: "Falls Lust auf ein zweites Konzert: Die Broilers spielen Sa, 11.7. abends im Open Air Park. Bonus-Konzertabend zum Abschluss.",
+    url: "https://www.openairpark-dus.de/" },
+  { id: 25, cat: "kunst", icon: "🖼️", title: "Museum Kunstpalast",
+    desc: "Klassische Sammlung von Mittelalter bis Moderne plus große Wechselausstellungen. Direkt am Rhein, ideal für einen Regen-B-Plan.",
+    url: "https://www.kunstpalast.de/" }
+];
+
+const voters = [
+  { key: "leon",  label: "Leon",  emoji: "🎂" },
+  { key: "ilian", label: "Ilian", emoji: "🎈" },
+  { key: "papa",  label: "Papa",  emoji: "🎁" }
+];
+
+const STORAGE_KEY = "ddorf_brainstorm_v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { votes: {}, notes: {}, general: "" };
+    const s = JSON.parse(raw);
+    return { votes: s.votes || {}, notes: s.notes || {}, general: s.general || "" };
+  } catch (e) { return { votes: {}, notes: {}, general: "" }; }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove("show"), 1400);
+}
+
+function getScore(id) {
+  const v = state.votes[id] || {};
+  return voters.reduce((sum, voter) => sum + (v[voter.key] ? 1 : 0), 0);
+}
+
+function renderEvent(ev) {
+  const noteVal = state.notes[ev.id] || "";
+  const card = document.createElement("article");
+  card.className = "card cat-" + ev.cat;
+  card.dataset.cat = ev.cat;
+  card.dataset.id = ev.id;
+  card.innerHTML = `
+    <div class="score" data-score-bubble>${getScore(ev.id)}</div>
+    <div class="card-head">
+      <div class="card-icon">${ev.icon}</div>
+      <div class="card-cat">${ev.cat.toUpperCase()}</div>
+    </div>
+    <h3>${ev.title}</h3>
+    <p class="desc">${ev.desc}</p>
+    <a class="detail" href="${ev.url}" target="_blank" rel="noopener">Details ansehen ↗</a>
+    <div class="votes" data-votes>
+      ${voters.map(v => `
+        <button class="vote-btn" data-voter="${v.key}" data-on="${(state.votes[ev.id]||{})[v.key] ? '1' : '0'}">
+          <span class="heart">${(state.votes[ev.id]||{})[v.key] ? '❤️' : '🤍'}</span>
+          <span>${v.emoji} ${v.label}</span>
+        </button>
+      `).join("")}
+    </div>
+    <textarea class="note" placeholder="Eigene Notiz zu diesem Event...">${escapeHtml(noteVal)}</textarea>
+  `;
+
+  // Vote-Klicks
+  card.querySelectorAll(".vote-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const voter = btn.dataset.voter;
+      state.votes[ev.id] = state.votes[ev.id] || {};
+      const newVal = !state.votes[ev.id][voter];
+      state.votes[ev.id][voter] = newVal;
+      btn.dataset.on = newVal ? "1" : "0";
+      btn.querySelector(".heart").textContent = newVal ? "❤️" : "🤍";
+      updateScore(card, ev.id);
+      saveState();
+      renderRanking();
+    });
+  });
+
+  // Notiz
+  card.querySelector("textarea.note").addEventListener("input", (e) => {
+    state.notes[ev.id] = e.target.value;
+    clearTimeout(card._noteTimer);
+    card._noteTimer = setTimeout(() => { saveState(); }, 350);
+  });
+
+  updateScore(card, ev.id);
+  return card;
+}
+
+function updateScore(card, id) {
+  const score = getScore(id);
+  const bubble = card.querySelector("[data-score-bubble]");
+  bubble.textContent = score;
+  bubble.classList.toggle("show", score > 0);
+}
+
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function renderRanking() {
+  const list = events
+    .map(e => ({ ev: e, score: getScore(e.id) }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  const target = document.getElementById("ranking");
+  if (list.length === 0) {
+    target.innerHTML = `<div class="rank-empty">Noch keine Stimmen abgegeben – los geht's! 💛</div>`;
+    return;
+  }
+  target.innerHTML = list.map((x, i) => {
+    const klass = i === 0 ? "gold" : i === 1 ? "silver" : i === 2 ? "bronze" : "";
+    const v = state.votes[x.ev.id] || {};
+    const who = voters.filter(v2 => v[v2.key]).map(v2 => v2.emoji).join("");
+    return `
+      <div class="rank-row">
+        <div class="rank-pos ${klass}">${i+1}</div>
+        <div class="rank-name">${x.ev.icon} ${x.ev.title}</div>
+        <div class="rank-score">${x.score} ${x.score === 1 ? "Stimme" : "Stimmen"} ${who}</div>
+      </div>`;
+  }).join("");
+}
+
+function init() {
+  const grid = document.getElementById("grid");
+  events.forEach(ev => grid.appendChild(renderEvent(ev)));
+  renderRanking();
+
+  // Filter
+  document.querySelectorAll("#filter button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#filter button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const cat = btn.dataset.cat;
+      document.querySelectorAll(".card").forEach(c => {
+        c.classList.toggle("hidden", cat !== "all" && c.dataset.cat !== cat);
+      });
+    });
+  });
+
+  // Allgemeine Notiz
+  const gn = document.getElementById("generalNote");
+  gn.value = state.general || "";
+  gn.addEventListener("input", (e) => {
+    state.general = e.target.value;
+    clearTimeout(gn._t);
+    gn._t = setTimeout(saveState, 350);
+  });
+}
+
+function resetAll() {
+  if (!confirm("Alle Stimmen und Notizen zurücksetzen?")) return;
+  state = { votes: {}, notes: {}, general: "" };
+  saveState();
+  document.getElementById("grid").innerHTML = "";
+  events.forEach(ev => document.getElementById("grid").appendChild(renderEvent(ev)));
+  document.getElementById("generalNote").value = "";
+  renderRanking();
+  showToast("Alles zurückgesetzt");
+}
+
+init();
+</script>
+
+</body>
+</html>
